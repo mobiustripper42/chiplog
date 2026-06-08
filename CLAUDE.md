@@ -93,11 +93,13 @@ No `production` branch and no `VersionTag.tsx` (that's a Next.js component — N
 
 **Dev identity:** `~/.claude/devname` (one-line handle). **Task model:** PROJECT_PLAN.md read at planning, written at retro; current-phase tasks are GitHub Issues.
 
-Skills that assume a webapp shape no-op or don't apply here: `/promote-production` (no `production` branch) and the Supabase/Playwright machinery referenced in some agent bodies. They're inert, not wrong — left in place so `/pull-seeds` stays a clean diff against seeds.
+Skills that assume a webapp shape no-op or don't apply here: `/promote-production` (no `production` branch) and the Supabase/Playwright machinery inside the logic-class skill bodies. They're inert, not wrong — left byte-identical so `/pull-seeds` stays a clean diff against seeds. (The *agent* bodies that actively recommended that stack were pruned — see DEC-008.)
 
 ## Agents
 
-`@architect` (Opus) · `@code-review` (Sonnet, wired into `/kill-this`) · `@pm` (Sonnet) · `@ui-reviewer` (Sonnet — reads `.claude/ui-context.md`) · `@sync-config` · `@tape-reader` · `@doc-consistency`. Some agent bodies reference RLS/shadcn/Supabase from the seeds webapp template — that guidance is inert for this vanilla PWA. Tune in place as the project teaches us what it needs.
+`@architect` (Opus) · `@code-review` (Sonnet, wired into `/kill-this`) · `@pm` (Sonnet) · `@ui-reviewer` (Sonnet — reads `.claude/ui-context.md`) · `@sync-config` · `@tape-reader` · `@doc-consistency`.
+
+`@architect`, `@code-review`, and `@pm` have been **de-webapp'd** (DEC-008) — their Next.js / Supabase / RLS / shadcn recommendations were replaced with the vanilla-PWA reality (averaging-math correctness, offline/PWA integrity, version lockstep, no-deps). `@ui-reviewer` is governed by `.claude/ui-context.md`, which overrides the shadcn/Playwright assumptions in its template body. The remaining template references to Supabase/Playwright live only in the **logic-class** files (`.claude/skills/**`, `@sync-config`, `@tape-reader`) — left byte-identical to seeds on purpose so `/pull-seeds` stays a clean diff; they're inert here.
 
 ## Approval Before Action
 

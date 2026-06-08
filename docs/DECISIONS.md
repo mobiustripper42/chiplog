@@ -44,6 +44,12 @@ The `DEC-S###` IDs referenced elsewhere are **seeds** workflow decisions (the te
 **Why:** No build hash to rely on. A monotonic version string in the service worker is the entire cache-busting story (SPEC § Updates): bump it, re-open the app once on the tailnet, the new shell is pulled.
 **Tradeoff:** Forgetting to bump it means clients keep the old shell. The versioning section in `CLAUDE.md` calls out all three places to change, and `/retro` owns the bump.
 
+## DEC-008: De-webapp the project's agents
+**Decision:** Strip the Next.js / Supabase / RLS / shadcn recommendations out of `@architect`, `@code-review`, and `@pm`, replacing them with vanilla-PWA review criteria (averaging-math correctness, accuracy-gate-before-buffer, offline/PWA integrity, version lockstep, no-deps stance). `@ui-reviewer` is left to `.claude/ui-context.md` (which already overrides its shadcn body). The logic-class files — `.claude/skills/**`, `@sync-config`, `@tape-reader` — are left byte-identical to seeds.
+**Why:** The seeds agent templates ship webapp guidance that actively steered Chiplog toward a stack it explicitly rejected (DEC-001). Inert-but-present guidance is a hazard: a reviewer told to look for "RLS gaps" and "missing Supabase `.error` checks" wastes attention and risks importing the wrong mental model into a vanilla project.
+**Tradeoff:** These three agents now diverge from the seeds templates. The nightly sync's `@sync-config` will see project-side edits on `hybrid`-class files and treat them as project-specific substitutions (skip), which is correct — but it means we don't get future seeds improvements to those agents for free. Worth it; the webapp framing was wrong for us.
+**Why not the skills too:** `.claude/skills/**` are `logic`-class (byte-identical-by-design across projects). Editing them breaks the `/pull-seeds` clean-diff contract for a few inert references that never fire here. Left alone deliberately.
+
 ---
 
 ## DEC-TBD: Pause/resume of the rolling buffer across app backgrounding

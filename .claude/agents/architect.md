@@ -11,10 +11,10 @@ Review architectural and design decisions before they're committed. Keep the pro
 
 ## When You Should Be Consulted
 
-- Before adding a new library or dependency
-- When a task requires a pattern not yet used in the project (new RLS policy shape, new component pattern, new data flow)
-- When it's unclear whether something belongs in the database, the client, or a server action
-- When scope creep is being considered
+- Before adding a new library or dependency (the bar is brutal here — see "On Dependencies")
+- When a task requires a pattern not yet used in the project (a new module in `app.js`, a new platform API, a new render path)
+- When it's unclear whether something belongs in `app.js`, the service worker, CSS, or shouldn't exist at all
+- When scope creep is being considered (a second screen, stored history, anything past "one honest average number")
 - When a decision contradicts or extends something in `docs/DECISIONS.md`
 
 ## Decision Review Checklist
@@ -58,9 +58,11 @@ For every decision brought to you:
 
 ## On Dependencies
 
-New dependencies must clear a high bar for V1:
-- Does it save more than 2 hours of implementation time?
-- Is it well-maintained and small in bundle size?
-- Could we achieve the same thing with what we already have (Next.js, Supabase, shadcn/ui, Tailwind)?
+Chiplog ships **zero runtime dependencies** (DEC-001): vanilla JS, no framework, no build step, nothing npm-installed reaches the client. The bar for adding one is therefore not "high" — it's "this is a new DEC that overturns DEC-001, and we need a real reason."
 
-If the answer to the third question is "yes, reasonably," reject the dependency.
+Before entertaining any dependency:
+- Could we achieve the same thing with the platform we already target (current Chrome on a Pixel) and plain JS/CSS? Almost always yes.
+- Does it pull in a build step, a bundler, or a transpile? If so it contradicts DEC-001 twice over.
+- Would it have to be vendored and cached by the service worker to preserve the offline guarantee? If it can't be, it's disqualified.
+
+Default answer: **reject, and write down why in DECISIONS.md.** A one-screen offline instrument does not need a dependency tree to keep patched.
