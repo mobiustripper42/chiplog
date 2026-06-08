@@ -1,0 +1,15 @@
+# Sessions worktree (orphan `sessions` branch checkout — DEC-S014)
+.sessions-worktree/
+
+# Per-box Claude Code override
+.claude/settings.local.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Node (none ship, but keep stray installs out of the repo)
+node_modules/
