@@ -40,14 +40,15 @@ Make the readout trustworthy in the field. Everything here needs **on-device obs
 | # | Task | Effort | Notes |
 |---|------|--------|-------|
 | 1.1 | On-water field test — verify avg vs. a known reference (chartplotter / second phone) | 3 | acceptance: within ~0.2 kn at steady speed |
-| 1.2 | Gap/backgrounding behavior — decide DEC-TBD (buffer split vs. straight-line) | 5 | @architect first |
-| 1.3 | STALE + reacquisition UX — confirm dimming/hold reads right when GPS drops | 3 | |
-| 1.4 | Accuracy-gate tuning pass — sane default + range validated against real scatter | 2 | |
-| 1.5 | Install/offline verification — cold launch off-tailnet, airplane mode | 2 | the whole point; observe, don't assume |
+| 1.2 | STALE + reacquisition UX — confirm dimming/hold reads right when GPS drops | 3 | |
+| 1.3 | Accuracy-gate tuning pass — sane default + range validated against real scatter | 2 | |
+| 1.4 | Install/offline verification — cold launch off-tailnet, airplane mode | 2 | the whole point; observe, don't assume |
 
-**Phase 1 total: 15 pts**
+**Phase 1 total: 10 pts**
 
 **Ejection point:** the number is trusted at the helm and the app launches offline, anywhere.
+
+> Backgrounding-gap handling is **decided, not a task** — V1 accepts straight-line bridging (DEC-009). Option B (gap detection + buffer split) is a future feature, parked in Phase 3.
 
 ---
 
@@ -62,6 +63,19 @@ Cosmetic + ergonomic refinement only. Nothing here changes the number.
 | 2.3 | Icon/typography review with @ui-reviewer at phase boundary | 2 | |
 
 **Phase 2 total: 6 pts**
+
+---
+
+## Phase 3: Backgrounding-gap handling (future — DEC-009 option B)
+
+Deferred feature, not yet scheduled. Only build if field testing shows backgrounding gaps with course changes distort the average enough to matter.
+
+| # | Task | Effort | Notes |
+|---|------|--------|-------|
+| 3.1 | @architect: settle split-vs-drop for gaps > N s | 2 | revisits DEC-009 |
+| 3.2 | Implement chosen gap handling + Node check on a synthetic gapped track | 3 | |
+
+**Phase 3 total: 5 pts** (not counted until scheduled)
 
 ---
 
@@ -82,7 +96,7 @@ Updated at each `/retro`.
 
 | Task | Claude says | You say | Question |
 |------|------------|---------|----------|
-| 1.2 | 5 | — | gap handling could be a 3 if we just accept straight-line bridging |
+| — | — | — | none open (gap-handling resolved as DEC-009) |
 
 ---
 
@@ -101,4 +115,4 @@ Updated at each `/retro`.
 | Task | Why it's cuttable | Defer to |
 |------|------------------|---------|
 | 2.x (all of Phase 2) | Pure polish; the instrument works without it | V1.1 |
-| 1.2 | Straight-line gap bridging is already "honest enough" | V1.1 |
+| 3.x (gap handling) | DEC-009: straight-line bridging is already "honest enough" for V1 | V1.1+ |
