@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Chiplog</title>
+  <meta name="description" content="Rolling-average GPS speed over ground, in knots." />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0b0d0e" id="theme-color-meta" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Chiplog" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="icon" href="icons/icon-192.png" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <!-- Status row -->
+    <header class="status" id="status">
+      <span class="status-item" id="gps-quality" title="GPS fix quality">
+        <span class="dot" id="gps-dot" data-level="none"></span>
+        <span id="gps-acc">— m</span>
+      </span>
+      <span class="status-item" id="fill" title="Samples in window / window fill">— fix · 0%</span>
+      <span class="status-item badge-stale" id="stale" hidden>STALE</span>
+    </header>
+
+    <!-- Hero: average SOG -->
+    <section class="hero">
+      <div class="hero-number">
+        <span id="avg">—</span><span class="unit">kn</span>
+      </div>
+      <div class="hero-sub" id="avg-sub">avg · 15 min</div>
+    </section>
+
+    <!-- Secondary: instantaneous SOG -->
+    <section class="secondary">
+      <span class="secondary-label">now</span>
+      <span class="secondary-number"><span id="inst">—</span> kn</span>
+    </section>
+
+    <!-- Controls -->
+    <footer class="controls">
+      <button class="btn btn-primary" id="toggle" type="button">Start</button>
+      <button class="btn btn-icon" id="open-settings" type="button" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </footer>
+
+    <p class="msg" id="msg" hidden></p>
+  </main>
+
+  <!-- Settings sheet -->
+  <div class="sheet-backdrop" id="settings" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="sheet-head">
+        <h2 id="settings-title">Settings</h2>
+        <button class="btn btn-icon" id="close-settings" type="button" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <label class="field">
+        <span class="field-label">Averaging window <b id="window-val">15 min</b></span>
+        <input type="range" id="window" min="1" max="60" step="1" value="15" />
+      </label>
+
+      <label class="field">
+        <span class="field-label">Accuracy gate <b id="gate-val">25 m</b></span>
+        <input type="range" id="gate" min="5" max="100" step="1" value="25" />
+        <span class="field-hint">Fixes worse than this are discarded.</span>
+      </label>
+
+      <div class="field">
+        <span class="field-label">Theme</span>
+        <div class="seg" id="theme-seg" role="group" aria-label="Theme">
+          <button type="button" data-theme-val="dark" class="seg-btn">Dark</button>
+          <button type="button" data-theme-val="red" class="seg-btn">Red night</button>
+          <button type="button" data-theme-val="light" class="seg-btn">Light</button>
+        </div>
+      </div>
+
+      <p class="sheet-foot">Chiplog · <span id="app-version">v0.0.0</span> · speed over ground only</p>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

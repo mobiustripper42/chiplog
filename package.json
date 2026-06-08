@@ -1,0 +1,12 @@
+{
+  "name": "chiplog",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Phone-based GPS speedometer — rolling-average speed over ground, in knots. Vanilla static PWA, offline, no backend.",
+  "license": "UNLICENSED",
+  "scripts": {
+    "serve": "python3 -m http.server 8080",
+    "check": "node --check app.js && node --check sw.js && node -e \"JSON.parse(require('fs').readFileSync('manifest.webmanifest'))\" && echo ok",
+    "icons": "python3 scripts/make-icons.py"
+  }
+}
