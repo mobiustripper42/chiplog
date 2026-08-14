@@ -52,13 +52,36 @@ chiplog's doc set is essentially the baseline `## Key Docs` table — **and unli
 
 `docs/BRAND.md` = voice + visual direction (DM Sans, monochrome + one accent). `docs/USER_STORIES.md` = what the helm needs. `docs/SPEC.md` carries the core behavior, jitter handling, and the **Out-of-scope (v1)** list.
 
-## Workflow Overrides
+## Workflow Mechanisms
 
-The shell's `## Micro Workflow` is webapp-shaped (Playwright + pgTAP + 375px screenshot). chiplog is a no-build vanilla PWA:
+The shell's `## Micro Workflow` states what three steps must **achieve** and names a slot for **how** (DEC-S042). These are slots, not overrides — there is no default to correct.
 
-- **Step 5 (the test):** for math/logic changes, a **Node check** (synthetic track → known knots, the way `docs`/commits show). For UI/behavior, an on-device or browser check. **Don't claim GPS behavior works without observing it.** No Playwright, no pgTAP.
-- **Build check** (for `/kill-this`, `/pause-this`): there is **no `npm run build`**. "Build check" = `node --check app.js sw.js` + valid `manifest.webmanifest` JSON + the math check still passing.
-- **Step 7 (Mobile screenshot):** the app *is* a single mobile screen — verify on-device / in a phone-sized browser, not via Playwright.
+| Slot | What it answers | This project |
+|---|---|---|
+| **Proof** | What counts as a check written before the change | **Maths/logic:** a Node check — synthetic track in, known knots out, the expected value computed by hand and written down *before* the edit. **UI/behaviour:** an on-device or phone-sized browser check. **Never claim GPS behaviour works without observing it.** No Playwright, no pgTAP — there is no server, no DB and no DOM framework. |
+| **Proof command** | How to run the checks covering what you touched | `npm run verify` — the three doc gates, then `npm run check` (`node --check` on `app.js` + `sw.js`, and a JSON parse of `manifest.webmanifest`). Run the maths check directly alongside it when the averaging path moved. |
+| **Surface check** | How to confirm the change is right where a person meets it | `npm run serve`, then open `http://localhost:8080` in a phone-sized viewport and read the number. Geolocation needs a secure context — `localhost` qualifies, a LAN IP does not. |
+
+**`npm run check` is a syntax check, not a test.** It proves the files parse. Say which of the two you ran; calling the syntax check a test is how an unverified change looks reviewed.
+
+**The gap, stated rather than papered over:** the averaging maths — the thing that makes this app worth having — has no automated coverage. Adding a runner would put a dependency tree into a project whose first decision was to have none (DEC-001). Until that trade is deliberately revisited, a maths change is proved by hand or it is not proved.
+
+## Blast-Radius Triggers
+
+Read by `/kill-this` Step 3.5. **Name paths, not categories.**
+
+**None of the four generic triggers can fire here.** No money moves, no money is computed, there is no auth or capability URL, and there are no migrations — no server, no database, no accounts. That is a property of the architecture (DEC-001), not an omission, and `/security-review` should not run on a routine diff.
+
+| Trigger | Paths |
+|---|---|
+| Money moving | none — no payments, no backend |
+| Money computed | none |
+| Auth / capability URL | none — single user, no accounts |
+| Data-changing migration | none — state is `localStorage` |
+
+**The one path where being wrong actually costs something** is `app.js`'s SOG computation and its accuracy gate: a confidently-displayed wrong number to someone judging progress at the helm. That is not a security trigger and `/security-review` would find nothing in it. It is what the hand-computed Proof above exists for.
+
+**`sw.js` is the other one to slow down for** — `CACHE_VERSION` is the update mechanism (DEC-007). Get it wrong and the fix ships to nobody while looking deployed.
 
 ## Migration Protocol (project)
 

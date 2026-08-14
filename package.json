@@ -2,11 +2,16 @@
   "name": "chiplog",
   "version": "0.1.0",
   "private": true,
-  "description": "Phone-based GPS speedometer — rolling-average speed over ground, in knots. Vanilla static PWA, offline, no backend.",
+  "description": "Phone-based GPS speedometer \u2014 rolling-average speed over ground, in knots. Vanilla static PWA, offline, no backend.",
   "license": "UNLICENSED",
   "scripts": {
     "serve": "python3 -m http.server 8080",
     "check": "node --check app.js && node --check sw.js && node -e \"JSON.parse(require('fs').readFileSync('manifest.webmanifest'))\" && echo ok",
-    "icons": "python3 scripts/make-icons.py"
+    "icons": "python3 scripts/make-icons.py",
+    "gen:decisions": "node scripts/gen-decisions-index.mjs",
+    "check:decisions": "node scripts/check-decisions.mjs",
+    "check:context": "node scripts/check-context.mjs",
+    "check:docs": "node scripts/check-docs.mjs",
+    "verify": "npm run check:decisions && npm run check:context && npm run check:docs && npm run check"
   }
 }

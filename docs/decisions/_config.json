@@ -1,0 +1,10 @@
+{
+  "spec": "docs/SPEC.md",
+  "families": {},
+  "topics": [
+    "Measurement & maths",
+    "Architecture & stack",
+    "Offline, PWA & updates",
+    "Workflow & tooling"
+  ]
+}

@@ -26,18 +26,21 @@ SEMVER  ( dev projects only — needs package.json )
                    ( needs origin/production — DEC-S022 )
   patch bumps      automatic in /its-dead on PR merge.
 
-REFLECT / SYNC
-  /read-the-tape   scan a session for anti-patterns.
-                   arg: number, file path, or none = latest.
-  /push-seeds      backport workflow wins to seeds.
-  /pull-seeds      pull seeds improvements into this project.
-                   gated on `seeds-version` match.
+REFLECT
+  /read-the-tape   scan sessions for anti-patterns; writes to seeds.
+                   --queue drains what the SessionEnd hook captured.
+                   bare: number, file path, or none = latest.
+  /doc-consistency-check
+                   cross-ref facts across docs. report-only.
 
-INFRA                              DOMAIN
-  /update-config                     /stripe-best-practices
-  /fewer-permission-prompts          /stripe-projects
-  /keybindings-help                  /upgrade-stripe
-  /session-start-hook                /claude-api
+  moving files between seeds and this repo is BY HAND now.
+  run seeds' drift.mjs to see what differs.
+
+INFRA
+  /update-config
+  /fewer-permission-prompts
+  /keybindings-help
+  /claude-api
   /simplify
   /loop <interval> <cmd>           BUILT-IN
   /init                              /review
@@ -54,6 +57,4 @@ THE SHORT VERSION
   end of work:       /kill-this     ->  /its-dead
   start of phase:    /start-phase
   end of phase:      /retro
-  after a rough one: /read-the-tape
-  after a good one:  /push-seeds
-  refresh template:  /pull-seeds
+  drain the tape:    /read-the-tape --queue

@@ -1,0 +1,11 @@
+---
+id: DEC-006
+title: "Bundle DM Sans; don't fetch it at runtime"
+topic: "Offline, PWA & updates"
+---
+
+## DEC-006: Bundle DM Sans; don't fetch it at runtime
+
+**Decision:** Self-host the DM Sans variable woff2 in `fonts/` and `@font-face` it locally; the service worker caches it with the shell.
+**Why:** SPEC requires the app to run with no network at runtime. A Google Fonts `<link>` would break offline launch and leak a request on every cold start. One ~37 KB variable woff2 covers every weight we use.
+**Tradeoff:** The font is checked into the repo and must be refreshed by hand if we ever change typeface. Worth it for a genuinely offline app.

@@ -15,7 +15,7 @@ Several agents and slash-command skills support the development workflow. All ru
 - Before adding a new library or dependency
 - When a task requires a pattern you haven't used yet
 - When scope creep is knocking at the door
-- When a task has a DEC-TBD flagged in PROJECT_PLAN.md
+- When a task depends on a decision the record leaves open
 
 **Spec:** `.claude/agents/architect.md`
 
@@ -113,7 +113,7 @@ Slash commands manage session lifecycle. Time tracking is automatic.
 **Purpose:** Safe pause point within a session. Use when you need to walk away but aren't done with the task.
 
 **What it does:**
-1. Runs `npm run build` — fixes errors before pausing
+1. Runs `npm run verify` — fixes errors before pausing (chiplog has no build step; `verify` is the doc gates plus the syntax check)
 2. Commits WIP with descriptive message
 3. Notes pause point in session-log.md (but doesn't close the entry)
 
@@ -139,7 +139,7 @@ Slash commands manage session lifecycle. Time tracking is automatic.
 **Purpose:** First half of shutdown. Checks build, commits, runs code review, drafts session log.
 
 **What it does:**
-1. Runs `npm run build` — fixes errors before committing
+1. Runs `npm run verify` — fixes errors before committing (chiplog has no build step; `verify` is the doc gates plus the syntax check)
 2. Commits all changes with phase/task prefix + Co-Authored-By
 3. Runs @code-review agent against HEAD
 4. Drafts session log entry (does NOT write yet)
@@ -197,6 +197,8 @@ Slash commands manage session lifecycle. Time tracking is automatic.
 | @pm | Sonnet | Start/end of sessions | Track progress, flag risks |
 | @ui-reviewer | Sonnet | After UI work, phase boundaries | Design quality |
 | @doc-consistency | Sonnet | Via `/doc-consistency-check`, ad-hoc when docs feel drifted | Cross-reference facts across docs; flag mismatches + placeholders. Report-only |
+| @tape-reader | Sonnet | Via `/read-the-tape` | Audits session JSONL for workflow anti-patterns. **Observer** — writes one cited observation to seeds, changes nothing here |
+| @ideas | Sonnet | Park an idea, re-rank, or audit the parking lot | Curate docs/FUTURE_IDEAS.md — no backticks, because the file does not exist yet and the doc gate reads a backticked path as a claim that it resolves. Edits only that file, and creates it on first use |
 | /its-alive | — | Session start | Timestamp + open session file + briefing |
 | /pause-this | — | Mid-session break | Safe pause with commit |
 | /restart-this | — | Resume from pause | Reload context |
@@ -207,9 +209,7 @@ Slash commands manage session lifecycle. Time tracking is automatic.
 | /bump-major | — | Breaking change | Manual major version bump |
 | /promote-production | — | Ship trunk to prod | ff-merge `main` → `production` (deploy-only), push |
 | /doc-consistency-check | — | Ad-hoc, when docs feel drifted | Invokes @doc-consistency; cross-refs `docs/*.md` + root `CLAUDE.md` |
-| /push-seeds | — | After workflow improvements | Backport project-side improvements to seeds templates |
-| /pull-seeds | — | After seeds gets new improvements | Pull template changes into this project |
-| /read-the-tape | — | After a session worth learning from | Audit session JSONL for anti-patterns |
+| /read-the-tape | — | `--queue` on a cadence; bare for one session | Audits session JSONL, writes one observation per session to seeds. Changes nothing here |
 
 **Per-session files:** the workflow uses `sessions/YYYY-MM-DD-HHMM-<dev>-<slug>.md` (one file per session) instead of a single monolithic `session-log.md`. `<dev>` comes from `~/.claude/devname` (one-line file, falls back to `$USER`). The slug is derived from the branch name (`task/X-foo` → `X-foo`, `main` → `main`, etc.). The active JSONL transcript path is captured in the file's frontmatter for later `/read-the-tape` audits.
 
