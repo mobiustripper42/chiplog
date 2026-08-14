@@ -20,8 +20,8 @@ An unresolved decision is recorded as a normal decision file whose body says it 
 - DEC-011 — Chiplog becomes a native store-published app; the PWA is retired
 
 ### Offline, PWA & updates
-- DEC-006 — Bundle DM Sans; don't fetch it at runtime _(refined by DEC-011 — the mechanism only — the font is still bundled rather than fetched, but via `expo-font` and a TTF/OTF, not an `@font-face` woff2 the service worker caches)_
-- DEC-007 — Cache-version string is the update mechanism _(retired by DEC-011 — the mechanism entirely — there is no service worker to version. The concern it existed for (a shipped fix actually reaching the device) moves to store release versioning)_
+- DEC-006 — Bundle DM Sans; don't fetch it at runtime _(revised by DEC-011 — the mechanism, not the principle — the font is still bundled rather than fetched, but delivered by `expo-font` instead of an `@font-face` woff2 the service worker caches. Whether the single-variable-file leg survives is unconfirmed)_
+- DEC-007 — Cache-version string is the update mechanism _(retired by DEC-011 — the service-worker leg only — there is no `CACHE_VERSION` and no cache to bust. The version-lockstep leg is not retired but unsettled, and is parked as an open question in DEC-011)_
 
 ### Workflow & tooling
 - DEC-002 — project-type = `tool`, not `webapp` _(refined by DEC-010 — the rationale only — `project-type` is still `tool`; nothing pushes templates at this repo any more, so the type gate is documentation rather than a filter)_
