@@ -1,0 +1,13 @@
+---
+id: DEC-001
+title: "Vanilla static PWA, no framework, no build step"
+topic: "Architecture & stack"
+---
+
+## DEC-001: Vanilla static PWA, no framework, no build step
+
+**Decision:** Plain `index.html` + `styles.css` + `app.js` + `sw.js` + `manifest.webmanifest`. No React, no Vite, no bundler, no npm runtime dependencies.
+**Why:** It's one screen. The SPEC's own recommendation: "Recommend vanilla — it's one screen." A framework here is ceremony — build tooling, a dependency tree to keep patched, and a transpile step to debug, all to render a single number. Vanilla also makes the offline story trivial: the files the service worker caches *are* the app, with nothing generated.
+**Tradeoff:** No component library, no lint/CI-out-of-the-box, no TypeScript types. We give up the seeds "webapp" ergonomics. State lives as module-level variables in `app.js` instead of in a framework's store.
+**The fallback we declined:** SPEC offers Vite + React + TS "to keep it in the seeds family." Rejected — the cost (toolchain, deps) buys nothing for a one-screen readout. Revisit only if the app grows a second screen or real view state.
+**Revisit if:** scope expands past a single screen, or client state outgrows a handful of module-level variables.

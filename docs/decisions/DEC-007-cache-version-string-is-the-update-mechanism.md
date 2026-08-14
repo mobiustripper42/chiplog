@@ -1,0 +1,11 @@
+---
+id: DEC-007
+title: "Cache-version string is the update mechanism"
+topic: "Offline, PWA & updates"
+---
+
+## DEC-007: Cache-version string is the update mechanism
+
+**Decision:** `sw.js` `CACHE_VERSION` is bumped on every shell change; `activate` deletes non-matching caches. `APP_VERSION` (app.js) and `package.json` version move in lockstep.
+**Why:** No build hash to rely on. A monotonic version string in the service worker is the entire cache-busting story (SPEC § Updates): bump it, re-open the app once on the tailnet, the new shell is pulled.
+**Tradeoff:** Forgetting to bump it means clients keep the old shell. The versioning section in `CLAUDE.md` calls out all three places to change, and `/retro` owns the bump.
