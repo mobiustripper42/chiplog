@@ -16,11 +16,12 @@ An unresolved decision is recorded as a normal decision file whose body says it 
 - DEC-009 — Straight-line bridging across backgrounding gaps (V1)
 
 ### Architecture & stack
-- DEC-001 — Vanilla static PWA, no framework, no build step
+- DEC-001 — Vanilla static PWA, no framework, no build step _(reversed by DEC-011 — the whole holding — framework, bundler, build step and npm dependencies all arrive with Expo. Only the taste behind it survives: still one screen, still no backend)_
+- DEC-011 — Chiplog becomes a native store-published app; the PWA is retired
 
 ### Offline, PWA & updates
-- DEC-006 — Bundle DM Sans; don't fetch it at runtime
-- DEC-007 — Cache-version string is the update mechanism
+- DEC-006 — Bundle DM Sans; don't fetch it at runtime _(revised by DEC-011 — the mechanism, not the principle — the font is still bundled rather than fetched, but delivered by `expo-font` instead of an `@font-face` woff2 the service worker caches. Whether the single-variable-file leg survives is unconfirmed)_
+- DEC-007 — Cache-version string is the update mechanism _(retired by DEC-011 — the service-worker leg only — there is no `CACHE_VERSION` and no cache to bust. The version-lockstep leg is not retired but unsettled, and is parked as an open question in DEC-011)_
 
 ### Workflow & tooling
 - DEC-002 — project-type = `tool`, not `webapp` _(refined by DEC-010 — the rationale only — `project-type` is still `tool`; nothing pushes templates at this repo any more, so the type gate is documentation rather than a filter)_
